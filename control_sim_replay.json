@@ -1,0 +1,60 @@
+{
+  "data_file": "inputs/control_sim_240.csv",
+  "data_provenance": {
+    "type": "SIMULATED",
+    "source": "使用种子 2024 由已知线性模型生成的合成对照数据，仅用于验证回放检验能否识别真实优势。"
+  },
+  "target_column": "yield_pct",
+  "objective": {
+    "direction": "maximize"
+  },
+  "variables": {
+    "temp_C": {
+      "role": "controllable",
+      "unit": "degC",
+      "bounds": [
+        40.0,
+        120.0
+      ]
+    },
+    "catalyst_pct": {
+      "role": "controllable",
+      "unit": "%",
+      "bounds": [
+        0.5,
+        5.0
+      ]
+    },
+    "time_min": {
+      "role": "controllable",
+      "unit": "min",
+      "bounds": [
+        10.0,
+        90.0
+      ]
+    }
+  },
+  "split": {
+    "method": "random",
+    "seed": 42,
+    "test_size": 0.35
+  },
+  "recommendation": {
+    "top_k": 3,
+    "candidate_budget": 300,
+    "grid_levels": 5,
+    "min_separation": 0.15
+  },
+  "model": {
+    "target_transform": "none",
+    "rf_min_train": 50
+  },
+  "quality": {
+    "min_rows": 30,
+    "min_mae_improvement_pct": 5.0,
+    "min_test_rows_for_r2": 20
+  },
+  "cleaning": {
+    "policy": "flag_only"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "data_file": "assets/sample_input_SIMULATED.csv",
+  "data_provenance": {
+    "type": "SIMULATED",
+    "source": "随包演示数据，由脚本生成；不是实验数据，仅用于可重复的端到端测试。"
+  },
+  "target_column": "yield_pct",
+  "objective": {
+    "direction": "maximize"
+  },
+  "variables": {
+    "temperature_C": {
+      "role": "controllable",
+      "unit": "degC",
+      "bounds": [
+        90.0,
+        140.0
+      ]
+    },
+    "catalyst_loading_pct": {
+      "role": "controllable",
+      "unit": "%",
+      "bounds": [
+        1.0,
+        3.9
+      ]
+    },
+    "residence_time_min": {
+      "role": "controllable",
+      "unit": "min",
+      "bounds": [
+        30.0,
+        80.0
+      ]
+    }
+  },
+  "split": {
+    "method": "random",
+    "seed": 42,
+    "test_size": 0.25
+  },
+  "recommendation": {
+    "top_k": 3,
+    "candidate_budget": 200,
+    "grid_levels": 5,
+    "min_separation": 0.15
+  },
+  "model": {
+    "target_transform": "none",
+    "rf_min_train": 50
+  },
+  "quality": {
+    "min_rows": 20,
+    "min_mae_improvement_pct": 5.0,
+    "min_test_rows_for_r2": 10
+  },
+  "cleaning": {
+    "policy": "flag_only"
+  }
+}

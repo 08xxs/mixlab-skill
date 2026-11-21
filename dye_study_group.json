@@ -1,0 +1,81 @@
+{
+  "data_file": "Dye_dataset_r_analysis.csv",
+  "data_provenance": {
+    "type": "PUBLIC_EXPERIMENTAL",
+    "source": "Dye_dataset_r.xlsx：项目团队从已发表论文汇编的 304 条染料降解记录，原始 'Ref:' 列保留逐条 DOI。本技能未逐条核验这些 DOI。"
+  },
+  "target_column": "Rate constant",
+  "objective": {
+    "direction": "maximize"
+  },
+  "variables": {
+    "Bandgap": {
+      "role": "context",
+      "unit": "eV",
+      "fixed_value": 2.71
+    },
+    "Dye concentration (mg.L)": {
+      "role": "controllable",
+      "unit": "mg/L",
+      "bounds": [
+        5.0,
+        25.0
+      ]
+    },
+    "Photocatalyst dosage (mg)": {
+      "role": "controllable",
+      "unit": "mg",
+      "bounds": [
+        5.0,
+        100.0
+      ]
+    },
+    "Solution volume (mL)": {
+      "role": "controllable",
+      "unit": "mL",
+      "bounds": [
+        25.0,
+        250.0
+      ]
+    },
+    "Time duration (min)": {
+      "role": "controllable",
+      "unit": "min",
+      "bounds": [
+        30.0,
+        197.0
+      ]
+    }
+  },
+  "split": {
+    "method": "group",
+    "group_column": "Ref",
+    "seed": 42,
+    "test_size": 0.25
+  },
+  "recommendation": {
+    "top_k": 3,
+    "candidate_budget": 300,
+    "grid_levels": 5,
+    "min_separation": 0.15
+  },
+  "model": {
+    "target_transform": "log10",
+    "rf_min_train": 50
+  },
+  "quality": {
+    "min_rows": 30,
+    "min_mae_improvement_pct": 5.0,
+    "min_test_rows_for_r2": 20
+  },
+  "cleaning": {
+    "policy": "flag_only"
+  },
+  "_notes": [
+    "bounds 由数据 5%-95% 分位区间给出，是 DATA_RANGE_DERIVED 占位值，不是安全上限；正式使用前必须由研究人员按实验条件替换。",
+    "Bandgap 为材料固有属性，作为 context 固定为训练数据中位数 2.71 eV。",
+    "Surface area 未纳入：该列缺失 171/304（56.3%），纳入会使可用样本减半。",
+    "target_transform=log10 依据：Rate constant 右偏（0.00002–0.4374），原始尺度线性模型 R2≈0.03。",
+    "split=group：按 Ref(DOI) 分组，避免同一篇论文的记录同时出现在训练与测试集。"
+  ]
+}
